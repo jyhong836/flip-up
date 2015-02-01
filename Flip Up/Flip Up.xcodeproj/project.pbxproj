@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD5541F31A7E7C2300185679 /* FlipBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5541F21A7E7C2300185679 /* FlipBoxNode.swift */; };
 		CD7041151A7E56A700CE6C1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041141A7E56A700CE6C1A /* AppDelegate.swift */; };
 		CD7041171A7E56A700CE6C1A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041161A7E56A700CE6C1A /* GameView.swift */; };
 		CD7041191A7E56A700CE6C1A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041181A7E56A700CE6C1A /* GameViewController.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CD5541F21A7E7C2300185679 /* FlipBoxNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlipBoxNode.swift; sourceTree = "<group>"; };
 		CD70410F1A7E56A700CE6C1A /* Flip Up.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flip Up.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD7041131A7E56A700CE6C1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD7041141A7E56A700CE6C1A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				CD7041141A7E56A700CE6C1A /* AppDelegate.swift */,
 				CD7041161A7E56A700CE6C1A /* GameView.swift */,
 				CD7041181A7E56A700CE6C1A /* GameViewController.swift */,
+				CD5541F21A7E7C2300185679 /* FlipBoxNode.swift */,
 				CD7041351A7E667800CE6C1A /* Arrow.swift */,
 				CD7041361A7E667800CE6C1A /* SCNVectorExt.swift */,
 				CD70411A1A7E56A700CE6C1A /* art.scnassets */,
@@ -223,6 +226,7 @@
 			files = (
 				CD7041381A7E667800CE6C1A /* SCNVectorExt.swift in Sources */,
 				CD7041171A7E56A700CE6C1A /* GameView.swift in Sources */,
+				CD5541F31A7E7C2300185679 /* FlipBoxNode.swift in Sources */,
 				CD7041371A7E667800CE6C1A /* Arrow.swift in Sources */,
 				CD7041191A7E56A700CE6C1A /* GameViewController.swift in Sources */,
 				CD7041151A7E56A700CE6C1A /* AppDelegate.swift in Sources */,
