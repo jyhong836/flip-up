@@ -6,7 +6,6 @@
 //  Copyright (c) 2015年 Junyuan Hong. All rights reserved.
 //
 
-import Cocoa
 import SceneKit
 
 class Arrow: SCNNode {

@@ -15,7 +15,7 @@
 		CD7041201A7E56A700CE6C1A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD70411E1A7E56A700CE6C1A /* MainMenu.xib */; };
 		CD70412C1A7E56A700CE6C1A /* Flip_UpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD70412B1A7E56A700CE6C1A /* Flip_UpTests.swift */; };
 		CD7041371A7E667800CE6C1A /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041351A7E667800CE6C1A /* Arrow.swift */; };
-		CD7041381A7E667800CE6C1A /* SCNNodeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041361A7E667800CE6C1A /* SCNNodeExt.swift */; };
+		CD7041381A7E667800CE6C1A /* SCNVectorExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7041361A7E667800CE6C1A /* SCNVectorExt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +41,7 @@
 		CD70412A1A7E56A700CE6C1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD70412B1A7E56A700CE6C1A /* Flip_UpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flip_UpTests.swift; sourceTree = "<group>"; };
 		CD7041351A7E667800CE6C1A /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
-		CD7041361A7E667800CE6C1A /* SCNNodeExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCNNodeExt.swift; sourceTree = "<group>"; };
+		CD7041361A7E667800CE6C1A /* SCNVectorExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCNVectorExt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +87,7 @@
 				CD7041161A7E56A700CE6C1A /* GameView.swift */,
 				CD7041181A7E56A700CE6C1A /* GameViewController.swift */,
 				CD7041351A7E667800CE6C1A /* Arrow.swift */,
-				CD7041361A7E667800CE6C1A /* SCNNodeExt.swift */,
+				CD7041361A7E667800CE6C1A /* SCNVectorExt.swift */,
 				CD70411A1A7E56A700CE6C1A /* art.scnassets */,
 				CD70411C1A7E56A700CE6C1A /* Images.xcassets */,
 				CD70411E1A7E56A700CE6C1A /* MainMenu.xib */,
@@ -221,7 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD7041381A7E667800CE6C1A /* SCNNodeExt.swift in Sources */,
+				CD7041381A7E667800CE6C1A /* SCNVectorExt.swift in Sources */,
 				CD7041171A7E56A700CE6C1A /* GameView.swift in Sources */,
 				CD7041371A7E667800CE6C1A /* Arrow.swift in Sources */,
 				CD7041191A7E56A700CE6C1A /* GameViewController.swift in Sources */,
