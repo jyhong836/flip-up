@@ -11,10 +11,37 @@ import SceneKit
 class FlipBoxNode: SCNNode {
     /* You have to add boxDir, targetDir and physicsbody before the node can flip */
     let box: SCNBox!
-    let rootNode: SCNNode? // the node where the box flip over. You can set as the scene.rootNode
+    let rootNode: SCNNode? // the node where the box flip over. You MUST set as the scene.rootNode
     
     var boxDir: SCNVector3? // relative to the FlipBoxNode
     var targetDir: SCNVector3? // relative to the rootNode
+    
+    var forceAxisArrow: Arrow?
+    var angularVecAxisArrow: Arrow?
+    var showForceAxis: Bool {
+        get {
+            if forceAxisArrow != nil {
+                return !forceAxisArrow!.hidden
+            } else {
+                return false
+            }
+        }
+        set {
+            forceAxisArrow?.hidden = !newValue
+        }
+    }
+    var showAngularVecAxis: Bool {
+        get {
+            if angularVecAxisArrow != nil {
+                return !angularVecAxisArrow!.hidden
+            } else {
+                return false
+            }
+        }
+        set {
+            angularVecAxisArrow?.hidden = !newValue
+        }
+    }
     
     /* The rootNode define the coordinate system where the box will flip over. */
     /* If the rootNode is nil, the box will not flip */
@@ -32,7 +59,7 @@ class FlipBoxNode: SCNNode {
     }
     
     func flip() {
-        if rootNode != nil && boxDir != nil && targetDir != nil && self.physicsBody != nil {
+        if self.physicsBody != nil && rootNode != nil && boxDir != nil && targetDir != nil {
             let nod = self.presentationNode()
             let v_max = SCNVector3Minus(nod.convertPosition(boxDir!, toNode: rootNode), nod.position)
             var torq = SCNVector4Zero
@@ -69,6 +96,31 @@ class FlipBoxNode: SCNNode {
                 //            NSLog("angular v is too large")
             }
             self.physicsBody!.applyTorque(torq, impulse: true)
+            
+            if let axis = forceAxisArrow {
+                axis.startPosition = nod.position
+                axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(torq.x*abs(torq.w)*4, torq.y*abs(torq.w)*4, torq.z*abs(torq.w)*4))
+            }
+            
+            if let axis = angularVecAxisArrow {
+                axis.startPosition = nod.position
+                axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(av.x*abs(av.w)*4, av.y*abs(av.w)*4, av.z*abs(av.w)*4))
+            }
         }
     }
+    
+    func setDefaultForceAxis() {
+        forceAxisArrow = Arrow(startPosition: SCNVector3Zero, endPosition:  SCNVector3Make(0, 1, 0))
+        forceAxisArrow!.setDiffuseColor(NSColor.redColor())
+        rootNode!.addChildNode(forceAxisArrow!)
+        showForceAxis = true
+    }
+    
+    func setDefaultAngularVecAxis() {
+        angularVecAxisArrow = Arrow(startPosition: SCNVector3Zero, endPosition: SCNVector3Make(0, 1, 0))
+        angularVecAxisArrow!.setDiffuseColor(NSColor.yellowColor())
+        rootNode!.addChildNode(angularVecAxisArrow!)
+        showAngularVecAxis = true
+    }
+    
 }

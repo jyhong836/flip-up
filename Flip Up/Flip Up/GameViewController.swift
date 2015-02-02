@@ -30,12 +30,12 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         cameraNode.position = SCNVector3(x: 0, y: 20, z: 35)
         cameraNode.rotation = SCNVector4(x: 1, y: 0, z: 0, w: -CGFloat(M_PI)/6)
         
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = SCNLightTypeOmni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
+//        // create and add a light to the scene
+//        let lightNode = SCNNode()
+//        lightNode.light = SCNLight()
+//        lightNode.light!.type = SCNLightTypeOmni
+//        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
+//        scene.rootNode.addChildNode(lightNode)
         
         // create and add an ambient light to the scene
         let ambientLightNode = SCNNode()
@@ -47,7 +47,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         // create and add floor
         let floor = SCNFloor()
         let floorNode = SCNNode(geometry: floor)
-        floor.firstMaterial?.diffuse.contents = NSColor(calibratedHue: 0.5, saturation: 1.0, brightness: 1.0, alpha: 1.0)
+        floor.firstMaterial?.diffuse.contents = NSColor(calibratedRed: 88/255, green: 165/255, blue: 240/255, alpha: 1.0)
         // add physics body to floor
         floorNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Kinematic, shape: nil)
         
@@ -61,7 +61,8 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 0, 1)
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
-        
+        boxNode.setDefaultAngularVecAxis()
+        boxNode.setDefaultForceAxis()
         scene.rootNode.addChildNode(boxNode)
 
         // set the scene to the view
