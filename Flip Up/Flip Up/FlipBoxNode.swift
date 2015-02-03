@@ -42,6 +42,8 @@ class FlipBoxNode: SCNNode {
         }
     }
     
+    var parallel: Bool = false // set to ture, if you just require the targetDir and boxDir parallel
+    
     init(geometry: SCNGeometry, rootNode r: SCNNode) {
         super.init()
         
@@ -86,9 +88,13 @@ class FlipBoxNode: SCNNode {
                 torq.x /= torq.w
                 torq.y /= torq.w
                 torq.z /= torq.w
-                torq.w = 0.01*asin(torq.w) * 180/CGFloat(M_PI)
-                torq.w *= torq.w
-                torq.w *= ((v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) >= 0) ? 1 : -1
+                torq.w = asin(torq.w)
+                if parallel {
+                    torq.w *= ((v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) >= 0) ? 1 : -1
+                } else if (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) < 0 {
+                    torq.w = CGFloat(M_PI) - torq.w
+                }
+                torq.w *= 1
             }
             // if the angular velocity is out of the range of torque, should be slowed down
             let av: SCNVector4 = self.physicsBody!.angularVelocity

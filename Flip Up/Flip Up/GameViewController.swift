@@ -57,7 +57,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         let boxGeo = SCNCapsule(capRadius: 2, height: 10)
         boxNode = FlipBoxNode(geometry: boxGeo, rootNode: scene.rootNode)
         boxNode.position = SCNVector3(x: 0, y: boxGeo.height/2, z: 0)
-        boxNode.rotation = SCNVector4Make(0, 1, 0, CGFloat(M_PI)*0.2)
+        boxNode.rotation = SCNVector4Make(1, 0, 0, CGFloat(M_PI))
         // add physics body to box
         boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 1, 0)
