@@ -84,7 +84,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     // implement SCNSceneRendererDelegate
     func renderer(aRenderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
-        boxNode.flip()
+        boxNode.flip({x in 0.5*x})
     }
     
 }

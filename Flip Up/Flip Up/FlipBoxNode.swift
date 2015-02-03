@@ -66,7 +66,7 @@ class FlipBoxNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func flip() {
+    func flip(wfunc: (CGFloat)->CGFloat) {
         if self.physicsBody != nil && rootNode != nil && boxDir != nil && targetDir != nil {
             let nod = self.presentationNode()
             let v_max = SCNVector3Minus(nod.convertPosition(boxDir!, toNode: rootNode), nod.position)
@@ -94,7 +94,8 @@ class FlipBoxNode: SCNNode {
                 } else if (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) < 0 {
                     torq.w = CGFloat(M_PI) - torq.w
                 }
-                torq.w *= 1
+//                torq.w *= 1
+                torq.w = wfunc(torq.w)
             }
             // if the angular velocity is out of the range of torque, should be slowed down
             let av: SCNVector4 = self.physicsBody!.angularVelocity
