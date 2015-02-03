@@ -10,7 +10,6 @@ import SceneKit
 
 class FlipBoxNode: SCNNode {
     /* You have to add boxDir, targetDir and physicsbody before the node can flip */
-    let box: SCNBox!
     let rootNode: SCNNode? // the node where the box flip over. You MUST set as the scene.rootNode
     
     var boxDir: SCNVector3? // relative to the FlipBoxNode
@@ -43,13 +42,20 @@ class FlipBoxNode: SCNNode {
         }
     }
     
+    init(geometry: SCNGeometry, rootNode r: SCNNode) {
+        super.init()
+        
+        self.geometry = geometry
+        
+        self.rootNode = r
+    }
+    
     /* The rootNode define the coordinate system where the box will flip over. */
     /* If the rootNode is nil, the box will not flip */
     init(width w: CGFloat, height h: CGFloat, length l: CGFloat, chamferRadius c: CGFloat, rootNode r: SCNNode) {
         super.init()
         
-        box = SCNBox(width: w, height: h, length: l, chamferRadius: c)
-        self.geometry = box
+        self.geometry = SCNBox(width: w, height: h, length: l, chamferRadius: c)
         
         self.rootNode = r
     }
@@ -97,14 +103,18 @@ class FlipBoxNode: SCNNode {
             }
             self.physicsBody!.applyTorque(torq, impulse: true)
             
-            if let axis = forceAxisArrow {
-                axis.startPosition = nod.position
-                axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(torq.x*abs(torq.w)*4, torq.y*abs(torq.w)*4, torq.z*abs(torq.w)*4))
+            if showForceAxis {
+                if let axis = forceAxisArrow {
+                    axis.startPosition = nod.position
+                    axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(torq.x*abs(torq.w)*4, torq.y*abs(torq.w)*4, torq.z*abs(torq.w)*4))
+                }
             }
             
-            if let axis = angularVecAxisArrow {
-                axis.startPosition = nod.position
-                axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(av.x*abs(av.w)*4, av.y*abs(av.w)*4, av.z*abs(av.w)*4))
+            if showAngularVecAxis {
+                if let axis = angularVecAxisArrow {
+                    axis.startPosition = nod.position
+                    axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(av.x*abs(av.w)*4, av.y*abs(av.w)*4, av.z*abs(av.w)*4))
+                }
             }
         }
     }
