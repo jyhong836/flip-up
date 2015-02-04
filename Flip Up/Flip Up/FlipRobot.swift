@@ -10,7 +10,7 @@ import SceneKit
 
 class FlipRobot {
     
-    var c: CGFloat = 2.0
+    var c: CGFloat = 0.1
     var funcGenerator: (CGFloat) -> (CGFloat)->CGFloat = {(c:CGFloat) in {(x: CGFloat) -> CGFloat in
         c*x}}
     var function: (CGFloat)->CGFloat
@@ -19,13 +19,15 @@ class FlipRobot {
     var initRotation: SCNVector4
     
     var stepCount = 0 // 0 => not start
-    var maxSteps = 1000
+    var maxSteps = 2000
     var genCount = 0  // 0 => not start
     var maxGens = 10
     var stableCount = 0 // the count of stable steps
-    var maxStableCount = 10
+    var maxStableCount = 120
+    var stableAngle = CGFloat(M_PI)*5/180
     
     var score = 0.0
+    var average = 0.0
     var totalScore = 0.0
     
     init(flipbox: FlipBoxNode, position: SCNVector3, rotation: SCNVector4) {
@@ -45,13 +47,17 @@ class FlipRobot {
     
     func nextGeneration() {
         genCount++
+        // MARK: clear
         stepCount = 0
         stableCount = 0
+        score = 0
+        totalScore = 0
+        average = 0
         if genCount > maxGens {
             // TODO: display the result
         }
         
-        c = 1.0 // TODO: to calculate next gen value of c
+        c += 0.1 // TODO: to calculate next gen value of c
         function = funcGenerator(c)
         
         if let physics = box.physicsBody {
@@ -67,12 +73,18 @@ class FlipRobot {
         
         var theta = box.flip(function)
         // TODO: calculate the score
-        if theta < CGFloat(M_PI)*1/180 {
+//        let nod = box.presentationNode()
+        score += pow(Double(theta!/stableAngle), 2.0)
+        average += Double(theta!/stableAngle)
+//        println("\(score)")
+        if theta < stableAngle {
             stableCount++
             if stableCount > maxStableCount {
                 // TODO: calculate the total score
+                average /= Double(stepCount)
+                totalScore = 1/Double(stepCount) //sqrt(score)
                 // TODO: display the result of this generation
-                NSLog("[\(genCount)] \(stepCount)steps: stable count > max")
+                NSLog("[\(genCount)] \(stepCount) steps: stable count > max, score \(totalScore)")
                 self.nextGeneration()
                 return
             }
@@ -81,9 +93,11 @@ class FlipRobot {
         }
         
         if stepCount >= maxSteps {
-            // TODO: calculate the total score
+            // TODO: calculate the total score, when not stable
+            average /= Double(stepCount)
+            totalScore = 1/(average)/sqrt(score/Double(stepCount))
             // TODO: display the result of this generation
-            NSLog("[\(genCount)] \(stepCount)steps")
+            NSLog("[\(genCount)] \(stepCount)steps, score \(totalScore)")
             self.nextGeneration()
         }
     }
