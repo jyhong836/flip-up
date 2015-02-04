@@ -15,6 +15,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     var scene: SCNScene!
     
+    var robot: FlipRobot!
     var boxNode: FlipBoxNode!
     
     override func awakeFromNib(){
@@ -61,10 +62,15 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         // add physics body to box
         boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 1, 0)
+        boxNode.boxRight = SCNVector3Make(1, 0, 0)
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
         boxNode.setDefaultAngularVecAxis()
         boxNode.setDefaultForceAxis()
         scene.rootNode.addChildNode(boxNode)
+        
+        // create the flip robot
+        robot = FlipRobot(flipbox: boxNode, position: boxNode.position, rotation: boxNode.rotation)
+        robot.nextGeneration()
 
         // set the scene to the view
         self.gameView!.scene = scene
@@ -84,7 +90,10 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     // implement SCNSceneRendererDelegate
     func renderer(aRenderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
-        boxNode.flip({x in 0.5*x})
+//        boxNode.flip({x in 0.5*x})
+//        let nod = boxNode.presentationNode()
+//        NSLog("\(nod.rotation.x),\(nod.rotation.y),\(nod.rotation.z),\(nod.rotation.w)")
+        robot.stepOnce()
     }
     
 }

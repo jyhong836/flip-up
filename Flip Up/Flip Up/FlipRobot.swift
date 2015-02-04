@@ -15,26 +15,47 @@ class FlipRobot {
         c*x}}
     var function: (CGFloat)->CGFloat
     var box: FlipBoxNode
+    var initPosition: SCNVector3
+    var initRotation: SCNVector4
     
     var stepCount = 0 // 0 => not start
+    var maxSteps = 600
     var genCount = 0  // 0 => not start
+    var maxGens = 10
     
-    init(flipbox: FlipBoxNode) {
+    var score = 0.0
+    var totalScore = 0.0
+    
+    init(flipbox: FlipBoxNode, position: SCNVector3, rotation: SCNVector4) {
         self.function = funcGenerator(self.c)
         box = flipbox
+        initPosition = position
+        initRotation = rotation
     }
     
-    init(funcGenerator: (CGFloat) -> (CGFloat)->CGFloat, flipbox: FlipBoxNode) {
+    init(funcGenerator: (CGFloat) -> (CGFloat)->CGFloat, flipbox: FlipBoxNode, position: SCNVector3, rotation: SCNVector4) {
         self.funcGenerator = funcGenerator
         self.function = funcGenerator(self.c)
         box = flipbox
+        initPosition = position
+        initRotation = rotation
     }
     
     func nextGeneration() {
         genCount++
+        stepCount = 0
+        if genCount > maxGens {
+            // TODO: display the result
+        }
         
         c = 1.0 // TODO: to calculate next gen value of c
         function = funcGenerator(c)
+        
+        if let physics = box.physicsBody {
+            physics.resetTransform()
+            physics.velocity = SCNVector3Zero
+            physics.angularVelocity = SCNVector4Zero
+        }
     }
     
     // make one step
@@ -42,6 +63,14 @@ class FlipRobot {
         stepCount++
         
         box.flip(function)
+        // TODO: calculate the score
+        
+        if stepCount >= maxSteps {
+            // TODO: calculate the total score
+            // TODO: display the result of this generation
+            NSLog("[\(genCount)] \(stepCount)steps")
+            self.nextGeneration()
+        }
     }
     
 }

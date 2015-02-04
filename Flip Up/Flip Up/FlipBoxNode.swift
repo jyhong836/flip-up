@@ -13,6 +13,7 @@ class FlipBoxNode: SCNNode {
     let rootNode: SCNNode? // the node where the box flip over. You MUST set as the scene.rootNode
     
     var boxDir: SCNVector3? // relative to the FlipBoxNode
+    var boxRight: SCNVector3? // the box right direction relative to the FlipBoxNode
     var targetDir: SCNVector3? // relative to the rootNode
     
     var forceAxisArrow: Arrow?
@@ -70,6 +71,7 @@ class FlipBoxNode: SCNNode {
         if self.physicsBody != nil && rootNode != nil && boxDir != nil && targetDir != nil {
             let nod = self.presentationNode()
             let v_max = SCNVector3Minus(nod.convertPosition(boxDir!, toNode: rootNode), nod.position)
+//            NSLog("\(v_max.x),\(v_max.y),\(v_max.z)")
             var torq = SCNVector4Zero
             
             torq.x = v_max.y*targetDir!.z - v_max.z*targetDir!.y
@@ -80,10 +82,20 @@ class FlipBoxNode: SCNNode {
                 torq.w = 1.0
             }
             if torq.w < 1e-12 {
-                torq.x = 0
-                torq.y = 0
-                torq.z = 0
-                torq.w = 0
+                if parallel || (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) > 0 {
+                    torq.x = 0
+                    torq.y = 0
+                    torq.z = 0
+                    torq.w = 0
+                } else if let right = self.boxRight {
+                    let vr = SCNVector3Minus(nod.convertPosition(right, toNode: rootNode), nod.position)
+                    torq.x = vr.x
+                    torq.y = vr.y
+                    torq.z = vr.z
+                    torq.w = CGFloat(M_PI)
+                } else {
+                    NSLog("WARN: the right dir of box is not set")
+                }
             } else {
                 torq.x /= torq.w
                 torq.y /= torq.w
@@ -94,6 +106,7 @@ class FlipBoxNode: SCNNode {
                 } else if (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) < 0 {
                     torq.w = CGFloat(M_PI) - torq.w
                 }
+//                NSLog("theta: \(torq.w)")
 //                torq.w *= 1
                 torq.w = wfunc(torq.w)
             }
