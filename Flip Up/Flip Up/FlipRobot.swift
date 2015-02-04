@@ -19,9 +19,11 @@ class FlipRobot {
     var initRotation: SCNVector4
     
     var stepCount = 0 // 0 => not start
-    var maxSteps = 600
+    var maxSteps = 1000
     var genCount = 0  // 0 => not start
     var maxGens = 10
+    var stableCount = 0 // the count of stable steps
+    var maxStableCount = 10
     
     var score = 0.0
     var totalScore = 0.0
@@ -44,6 +46,7 @@ class FlipRobot {
     func nextGeneration() {
         genCount++
         stepCount = 0
+        stableCount = 0
         if genCount > maxGens {
             // TODO: display the result
         }
@@ -62,8 +65,20 @@ class FlipRobot {
     func stepOnce() {
         stepCount++
         
-        box.flip(function)
+        var theta = box.flip(function)
         // TODO: calculate the score
+        if theta < CGFloat(M_PI)*1/180 {
+            stableCount++
+            if stableCount > maxStableCount {
+                // TODO: calculate the total score
+                // TODO: display the result of this generation
+                NSLog("[\(genCount)] \(stepCount)steps: stable count > max")
+                self.nextGeneration()
+                return
+            }
+        } else {
+            stableCount = 0
+        }
         
         if stepCount >= maxSteps {
             // TODO: calculate the total score
