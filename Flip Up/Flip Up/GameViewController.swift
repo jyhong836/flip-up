@@ -70,7 +70,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         
         // create the flip robot
         robot = FlipRobot(flipbox: boxNode, position: boxNode.position, rotation: boxNode.rotation)
-        robot.nextGeneration()
+//        robot.nextGeneration()// FIXME
 
         // set the scene to the view
         self.gameView!.scene = scene
@@ -88,12 +88,15 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         self.gameView!.delegate = self
     }
     
+    var stepOnceFlag = true
     // implement SCNSceneRendererDelegate
     func renderer(aRenderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
 //        boxNode.flip({x in 0.5*x})
 //        let nod = boxNode.presentationNode()
 //        NSLog("\(nod.rotation.x),\(nod.rotation.y),\(nod.rotation.z),\(nod.rotation.w)")
-        robot.stepOnce()
+        if stepOnceFlag {
+            stepOnceFlag = robot.stepOnce()
+        }
     }
     
 }
