@@ -15,6 +15,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     var scene: SCNScene!
     
+    var robot: FlipRobot!
     var boxNode: FlipBoxNode!
     
     override func awakeFromNib(){
@@ -57,14 +58,19 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         let boxGeo = SCNCapsule(capRadius: 2, height: 10)
         boxNode = FlipBoxNode(geometry: boxGeo, rootNode: scene.rootNode)
         boxNode.position = SCNVector3(x: 0, y: boxGeo.height/2, z: 0)
-        boxNode.rotation = SCNVector4Make(0, 1, 0, CGFloat(M_PI)*0.2)
+        boxNode.rotation = SCNVector4Make(1, 0, 0, CGFloat(M_PI))
         // add physics body to box
         boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 1, 0)
+        boxNode.boxRight = SCNVector3Make(1, 0, 0)
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
         boxNode.setDefaultAngularVecAxis()
         boxNode.setDefaultForceAxis()
         scene.rootNode.addChildNode(boxNode)
+        
+        // create the flip robot
+        robot = FlipRobot(flipbox: boxNode, position: boxNode.position, rotation: boxNode.rotation)
+//        robot.nextGeneration()// FIXME
 
         // set the scene to the view
         self.gameView!.scene = scene
@@ -82,9 +88,15 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         self.gameView!.delegate = self
     }
     
+    var stepOnceFlag = true
     // implement SCNSceneRendererDelegate
     func renderer(aRenderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: NSTimeInterval) {
-        boxNode.flip()
+//        boxNode.flip({x in 0.5*x})
+//        let nod = boxNode.presentationNode()
+//        NSLog("\(nod.rotation.x),\(nod.rotation.y),\(nod.rotation.z),\(nod.rotation.w)")
+        if stepOnceFlag {
+            stepOnceFlag = robot.stepOnce()
+        }
     }
     
 }

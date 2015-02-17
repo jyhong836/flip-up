@@ -13,6 +13,7 @@ class FlipBoxNode: SCNNode {
     let rootNode: SCNNode? // the node where the box flip over. You MUST set as the scene.rootNode
     
     var boxDir: SCNVector3? // relative to the FlipBoxNode
+    var boxRight: SCNVector3? // the box right direction relative to the FlipBoxNode
     var targetDir: SCNVector3? // relative to the rootNode
     
     var forceAxisArrow: Arrow?
@@ -42,6 +43,8 @@ class FlipBoxNode: SCNNode {
         }
     }
     
+    var parallel: Bool = false // set to ture, if you just require the targetDir and boxDir parallel
+    
     init(geometry: SCNGeometry, rootNode r: SCNNode) {
         super.init()
         
@@ -64,31 +67,52 @@ class FlipBoxNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func flip() {
+    /* return the angle between boxDir and targetDir */
+    func flip(wfunc: (CGFloat)->CGFloat) -> CGFloat? {
         if self.physicsBody != nil && rootNode != nil && boxDir != nil && targetDir != nil {
             let nod = self.presentationNode()
             let v_max = SCNVector3Minus(nod.convertPosition(boxDir!, toNode: rootNode), nod.position)
+//            NSLog("\(v_max.x),\(v_max.y),\(v_max.z)")
             var torq = SCNVector4Zero
+            var theta: CGFloat = 0.0
             
             torq.x = v_max.y*targetDir!.z - v_max.z*targetDir!.y
             torq.y = v_max.z*targetDir!.x - v_max.x*targetDir!.z
             torq.z = v_max.x*targetDir!.y - v_max.y*targetDir!.x
-            torq.w = sqrt(pow(torq.x,2)+pow(torq.y,2)+pow(torq.z,2))
-            if torq.w > 1.0 { // avoid: asin -> nan
-                torq.w = 1.0
+            theta = sqrt(pow(torq.x,2)+pow(torq.y,2)+pow(torq.z,2))
+            if theta > 1.0 { // avoid: asin -> nan
+                theta = 1.0
             }
-            if torq.w < 1e-12 {
-                torq.x = 0
-                torq.y = 0
-                torq.z = 0
-                torq.w = 0
+            if theta < 1e-12 {
+                if parallel || (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) > 0 {
+                    torq.x = 0
+                    torq.y = 0
+                    torq.z = 0
+                    theta = 0
+                    torq.w = 0
+                } else if let right = self.boxRight {
+                    let vr = SCNVector3Minus(nod.convertPosition(right, toNode: rootNode), nod.position)
+                    torq.x = vr.x
+                    torq.y = vr.y
+                    torq.z = vr.z
+                    theta = CGFloat(M_PI)
+                    torq.w = theta
+                } else {
+                    NSLog("WARN: the right dir of box is not set")
+                }
             } else {
-                torq.x /= torq.w
-                torq.y /= torq.w
-                torq.z /= torq.w
-                torq.w = 0.01*asin(torq.w) * 180/CGFloat(M_PI)
-                torq.w *= torq.w
-                torq.w *= ((v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) >= 0) ? 1 : -1
+                torq.x /= theta
+                torq.y /= theta
+                torq.z /= theta
+                theta = asin(theta)
+                if parallel {
+                    theta *= ((v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) >= 0) ? 1 : -1
+                } else if (v_max.x*targetDir!.x + v_max.y*targetDir!.y + v_max.z*targetDir!.z) < 0 {
+                    theta = CGFloat(M_PI) - theta
+                }
+//                NSLog("theta: \(torq.w)")
+//                torq.w *= 1
+                torq.w = wfunc(theta)
             }
             // if the angular velocity is out of the range of torque, should be slowed down
             let av: SCNVector4 = self.physicsBody!.angularVelocity
@@ -116,7 +140,9 @@ class FlipBoxNode: SCNNode {
                     axis.endPosition = SCNVector3Add(nod.position, SCNVector3Make(av.x*abs(av.w)*4, av.y*abs(av.w)*4, av.z*abs(av.w)*4))
                 }
             }
+            return theta
         }
+        return nil
     }
     
     func setDefaultForceAxis() {
