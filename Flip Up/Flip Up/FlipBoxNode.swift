@@ -16,6 +16,31 @@ class FlipBoxNode: SCNNode {
     var boxRight: SCNVector3? // the box right direction relative to the FlipBoxNode
     var targetDir: SCNVector3? // relative to the rootNode
     
+    // MARK: flip neccessary
+    var c: CGFloat = 0.1
+    var function: (CGFloat)->CGFloat = {(x: CGFloat) -> CGFloat in 0.1*x}
+    
+    // MARK: robot learning data
+    var isResting = false
+    var stepCount = 0 // 0 => not start
+    var stableCount = 0 // the count of stable steps
+    var score = 0.0
+    var average = 0.0
+    var totalScore = 0.0
+    func resetLearningData() {
+        isResting = false
+        stepCount = 0
+        stableCount = 0
+        score = 0.0
+        average = 0.0
+        totalScore = 0.0
+        if let physics = self.physicsBody {
+            physics.resetTransform()
+            physics.velocity = SCNVector3Zero
+            physics.angularVelocity = SCNVector4Zero
+        }
+    }
+    
     var forceAxisArrow: Arrow?
     var angularVecAxisArrow: Arrow?
     var showForceAxis: Bool {
