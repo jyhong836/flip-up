@@ -12,6 +12,7 @@ import QuartzCore
 class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     @IBOutlet weak var gameView: GameView!
+    @IBOutlet weak var generationLabel: NSTextField!
     
     var scene: SCNScene!
     
@@ -94,6 +95,9 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
 //        NSLog("\(nod.rotation.x),\(nod.rotation.y),\(nod.rotation.z),\(nod.rotation.w)")
         if stepOnceFlag {
             stepOnceFlag = robot.stepOnce()
+            generationLabel.stringValue = "Generation \(robot.genCount)"
+        } else {
+            robot.flipAll()
         }
     }
     

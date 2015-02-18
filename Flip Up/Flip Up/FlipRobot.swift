@@ -104,11 +104,21 @@ class FlipRobot {
         return true
     }
     
+    func flipAll() {
+        for box in indBox {
+            box.flip()
+        }
+    }
+    
     func stepOnce() -> Bool {
         var existActive = false
         for box in indBox {
-            if !box.isResting && stepOnce(box) {
-                existActive = true
+            if !box.isResting {
+                if stepOnce(box) {
+                    existActive = true
+                }
+            } else {
+                box.flip()
             }
         }
         if !existActive { // no individual is active

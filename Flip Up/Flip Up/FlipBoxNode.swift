@@ -92,6 +92,10 @@ class FlipBoxNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func flip() -> CGFloat? {
+        return self.flip(self.function)
+    }
+    
     /* return the angle between boxDir and targetDir */
     func flip(wfunc: (CGFloat)->CGFloat) -> CGFloat? {
         if self.physicsBody != nil && rootNode != nil && boxDir != nil && targetDir != nil {
