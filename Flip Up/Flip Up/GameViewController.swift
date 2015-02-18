@@ -12,6 +12,7 @@ import QuartzCore
 class GameViewController: NSViewController, SCNSceneRendererDelegate {
     
     @IBOutlet weak var gameView: GameView!
+    @IBOutlet weak var generationLabel: NSTextField!
     
     var scene: SCNScene!
     
@@ -51,6 +52,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         floor.firstMaterial?.diffuse.contents = NSColor(calibratedRed: 88/255, green: 165/255, blue: 240/255, alpha: 1.0)
         // add physics body to floor
         floorNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Kinematic, shape: nil)
+        floorNode.physicsBody?.categoryBitMask = ~0
         
         scene.rootNode.addChildNode(floorNode)
         
@@ -59,8 +61,6 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         boxNode = FlipBoxNode(geometry: boxGeo, rootNode: scene.rootNode)
         boxNode.position = SCNVector3(x: 0, y: boxGeo.height/2, z: 0)
         boxNode.rotation = SCNVector4Make(1, 0, 0, CGFloat(M_PI))
-        // add physics body to box
-        boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 1, 0)
         boxNode.boxRight = SCNVector3Make(1, 0, 0)
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
@@ -70,7 +70,6 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         
         // create the flip robot
         robot = FlipRobot(flipbox: boxNode, position: boxNode.position, rotation: boxNode.rotation)
-//        robot.nextGeneration()// FIXME
 
         // set the scene to the view
         self.gameView!.scene = scene
@@ -96,6 +95,9 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
 //        NSLog("\(nod.rotation.x),\(nod.rotation.y),\(nod.rotation.z),\(nod.rotation.w)")
         if stepOnceFlag {
             stepOnceFlag = robot.stepOnce()
+            generationLabel.stringValue = "Generation \(robot.genCount)"
+        } else {
+            robot.flipAll()
         }
     }
     

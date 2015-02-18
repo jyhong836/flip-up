@@ -16,6 +16,31 @@ class FlipBoxNode: SCNNode {
     var boxRight: SCNVector3? // the box right direction relative to the FlipBoxNode
     var targetDir: SCNVector3? // relative to the rootNode
     
+    // MARK: flip neccessary
+    var c: CGFloat = 0.1
+    var function: (CGFloat)->CGFloat = {(x: CGFloat) -> CGFloat in 0.1*x}
+    
+    // MARK: robot learning data
+    var isResting = false
+    var stepCount = 0 // 0 => not start
+    var stableCount = 0 // the count of stable steps
+    var score = 0.0
+    var average = 0.0
+    var totalScore = 0.0
+    func resetLearningData() {
+        isResting = false
+        stepCount = 0
+        stableCount = 0
+        score = 0.0
+        average = 0.0
+        totalScore = 0.0
+        if let physics = self.physicsBody {
+            physics.resetTransform()
+            physics.velocity = SCNVector3Zero
+            physics.angularVelocity = SCNVector4Zero
+        }
+    }
+    
     var forceAxisArrow: Arrow?
     var angularVecAxisArrow: Arrow?
     var showForceAxis: Bool {
@@ -65,6 +90,10 @@ class FlipBoxNode: SCNNode {
 
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func flip() -> CGFloat? {
+        return self.flip(self.function)
     }
     
     /* return the angle between boxDir and targetDir */
@@ -157,6 +186,18 @@ class FlipBoxNode: SCNNode {
         angularVecAxisArrow!.setDiffuseColor(NSColor.yellowColor())
         rootNode!.addChildNode(angularVecAxisArrow!)
         showAngularVecAxis = true
+    }
+    
+    func makeCopy() -> FlipBoxNode {
+        var nod = FlipBoxNode(geometry: self.geometry!, rootNode: self.rootNode!)
+        nod.boxDir = self.boxDir!
+        nod.boxRight = self.boxRight!
+        nod.targetDir = self.targetDir!
+        nod.forceAxisArrow = self.forceAxisArrow!
+        nod.angularVecAxisArrow = self.angularVecAxisArrow!
+        nod.position = self.position
+        nod.rotation = self.rotation
+        return nod
     }
     
 }
