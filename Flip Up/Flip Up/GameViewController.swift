@@ -51,6 +51,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         floor.firstMaterial?.diffuse.contents = NSColor(calibratedRed: 88/255, green: 165/255, blue: 240/255, alpha: 1.0)
         // add physics body to floor
         floorNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Kinematic, shape: nil)
+        floorNode.physicsBody?.categoryBitMask = ~0
         
         scene.rootNode.addChildNode(floorNode)
         
@@ -66,6 +67,7 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
         boxNode.setDefaultAngularVecAxis()
         boxNode.setDefaultForceAxis()
+//        boxNode.categoryBitMask = 1<<3
         scene.rootNode.addChildNode(boxNode)
         
         // create the flip robot

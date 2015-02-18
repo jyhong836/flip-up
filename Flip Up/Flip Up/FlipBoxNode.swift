@@ -159,4 +159,16 @@ class FlipBoxNode: SCNNode {
         showAngularVecAxis = true
     }
     
+    func makeCopy() -> FlipBoxNode {
+        var nod = FlipBoxNode(geometry: self.geometry!, rootNode: self.rootNode!)
+        nod.boxDir = self.boxDir!
+        nod.boxRight = self.boxRight!
+        nod.targetDir = self.targetDir!
+        nod.forceAxisArrow = self.forceAxisArrow!
+        nod.angularVecAxisArrow = self.angularVecAxisArrow!
+        nod.position = self.position
+        nod.rotation = self.rotation
+        return nod
+    }
+    
 }

@@ -24,9 +24,10 @@ class FlipRobot {
     var maxGens = 10
     var indCount = 0
     var indNum = 10 // TODO: init the var and indgap in init, must be even
-    var inds: [CGFloat]!
-    var indscore: [CGFloat: Double]!
+    var inds = [CGFloat]()
+    var indscore = [CGFloat: Double]()
     var indgap: CGFloat = 2.0/10
+    var indBox = [FlipBoxNode]()
     var stableCount = 0 // the count of stable steps
     var maxStableCount = 120
     var stableAngle = CGFloat(M_PI)*5/180
@@ -54,11 +55,18 @@ class FlipRobot {
     
     func initGene() {
         inds = [CGFloat](count: indNum, repeatedValue: 0.0)
-        indscore = [CGFloat: Double]()
         indscore[inds[0]] = 0.0
+        indBox.append(box)
+        box.physicsBody?.collisionBitMask = 1<<(0+1)
         for i in 1..<indNum {
             inds[i] = inds[i-1] + indgap
             indscore[inds[i]] = 0.0
+            
+            var b = box.makeCopy()
+            b.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
+            indBox.append(b)
+            box.rootNode?.addChildNode(b)
+            b.physicsBody?.collisionBitMask = 1<<(i+1)
         }
         
         stepCount = 0
