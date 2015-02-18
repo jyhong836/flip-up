@@ -60,19 +60,15 @@ class GameViewController: NSViewController, SCNSceneRendererDelegate {
         boxNode = FlipBoxNode(geometry: boxGeo, rootNode: scene.rootNode)
         boxNode.position = SCNVector3(x: 0, y: boxGeo.height/2, z: 0)
         boxNode.rotation = SCNVector4Make(1, 0, 0, CGFloat(M_PI))
-        // add physics body to box
-//        boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.Dynamic, shape: nil)
         boxNode.boxDir = SCNVector3Make(0, 1, 0)
         boxNode.boxRight = SCNVector3Make(1, 0, 0)
         boxNode.targetDir = SCNVector3Make(0, 1, 0)
         boxNode.setDefaultAngularVecAxis()
         boxNode.setDefaultForceAxis()
-//        boxNode.categoryBitMask = 1<<3
         scene.rootNode.addChildNode(boxNode)
         
         // create the flip robot
         robot = FlipRobot(flipbox: boxNode, position: boxNode.position, rotation: boxNode.rotation)
-//        robot.nextGeneration()// FIXME
 
         // set the scene to the view
         self.gameView!.scene = scene

@@ -10,31 +10,23 @@ import SceneKit
 
 class FlipRobot {
     
-//    var c: CGFloat = 0.1
     var funcGenerator: (CGFloat) -> (CGFloat)->CGFloat = {(c:CGFloat) in {(x: CGFloat) -> CGFloat in
         c*x}} // TODO: Do we really need the generator?
-//    var function: (CGFloat)->CGFloat
     var box: FlipBoxNode
     var initPosition: SCNVector3
     var initRotation: SCNVector4
     
-//    var stepCount = 0 // 0 => not start
     var maxSteps = 2000
     var genCount = 0  // 0 => not start
     var maxGens = 10
-//    var indCount = 0
     var indNum = 10 // TODO: init the var and indgap in init, must be even
     var inds = [CGFloat]()
     var indscore = [CGFloat: Double]()
     var indgap: CGFloat = 2.0/10
     var indBox = [FlipBoxNode]()
-//    var stableCount = 0 // the count of stable steps
     var maxStableCount = 120
     var stableAngle = CGFloat(M_PI)*5/180
     
-//    var score = 0.0
-//    var average = 0.0
-//    var totalScore = 0.0
     
     init(flipbox: FlipBoxNode, position: SCNVector3, rotation: SCNVector4) {
         box = flipbox
@@ -73,40 +65,7 @@ class FlipRobot {
             b.c = inds[i]
             b.function = funcGenerator(b.c)
         }
-        
-//        stepCount = 0
-//        stableCount = 0
-//        score = 0
-//        totalScore = 0
-//        average = 0
-//        c = inds[indCount]
     }
-    
-//    func nextIndividual() -> Bool {
-//        indscore[inds[indCount]] = totalScore
-//        // MARK: clear
-//        stepCount = 0
-//        stableCount = 0
-//        score = 0
-//        totalScore = 0
-//        average = 0
-//        
-//        indCount++
-//        if indCount >= inds.count {
-//            if !nextGeneration() {
-//                return false
-//            }
-//        }
-//        c = inds[indCount]
-//        function = funcGenerator(c)
-//        
-//        if let physics = box.physicsBody {
-//            physics.resetTransform()
-//            physics.velocity = SCNVector3Zero
-//            physics.angularVelocity = SCNVector4Zero
-//        }
-//        return true
-//    }
     
     func updateIndivdual(boxIndex: Int) {
         
@@ -124,7 +83,6 @@ class FlipRobot {
         }
         
         genCount++
-//        indCount = 0;
         // MARK: update inds for new generation
         let _inds = inds.sorted({(a,b)->Bool in self.indscore[a]>self.indscore[b]})
         NSLog("end of the \(genCount) generation\n\tindgap: \(indgap)")
@@ -175,7 +133,6 @@ class FlipRobot {
                 box.average /= Double(box.stepCount)
                 box.totalScore = 1.0+1/Double(box.stepCount) //sqrt(score)
                 println("[\(genCount):\(box.c)] \(box.stepCount) steps: stable count > max\n\tscore \(box.totalScore)")
-//                return self.nextIndividual()
                 box.isResting = true
                 return false
             }
@@ -188,7 +145,6 @@ class FlipRobot {
             box.average /= Double(box.stepCount)
             box.totalScore = 1/(box.average)/sqrt(box.score/Double(box.stepCount))
             println("[\(genCount):\(box.c)] \(box.stepCount)steps\n\tscore \(box.totalScore)")
-//            return self.nextIndividual()
             box.isResting = true
             return false
         }
